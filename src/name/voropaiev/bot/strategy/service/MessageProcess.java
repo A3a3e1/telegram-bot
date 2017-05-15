@@ -5,9 +5,9 @@ import java.util.Random;
 
 import org.telegram.telegrambots.api.objects.Message;
 
-import name.voropaiev.bot.LongPollingBotEntryPoint;
 import name.voropaiev.bot.jpa.entities.Phrase;
 import name.voropaiev.bot.jpa.service.PhraseService;
+import name.voropaiev.bot.main.LongPollingBotEntryPoint;
 
 public class MessageProcess {
 	

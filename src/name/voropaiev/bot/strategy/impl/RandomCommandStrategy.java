@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 
 import org.telegram.telegrambots.api.objects.Message;
 
-import name.voropaiev.bot.LongPollingBotEntryPoint;
+import name.voropaiev.bot.main.LongPollingBotEntryPoint;
 import name.voropaiev.bot.strategy.IInputCommandStrategy;
 
 public class RandomCommandStrategy implements IInputCommandStrategy {

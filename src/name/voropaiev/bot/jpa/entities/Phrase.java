@@ -3,11 +3,14 @@ package name.voropaiev.bot.jpa.entities;
 import java.io.Serializable;
 import javax.persistence.*;
 
+import lombok.Data;
+
 /**
  * The persistent class for the PHRASES database table.
  * 
  */
 @Entity
+@Data
 @Table(name="PHRASES")
 @NamedQueries({
 	@NamedQuery(name="Phrase.findAll", query="SELECT p FROM Phrase p"),
@@ -23,45 +26,12 @@ public class Phrase implements Serializable {
 
 	@Column(name="NICK_NAME")
 	private String nickName;
-
 	private String phrase;
 
 	@Column(name="TELEGRAM_ID")
 	private int telegramId;
 
 	public Phrase() {
-	}
-
-	public int getId() {
-		return this.id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
-
-	public String getNickName() {
-		return this.nickName;
-	}
-
-	public void setNickName(String nickName) {
-		this.nickName = nickName;
-	}
-
-	public String getPhrase() {
-		return this.phrase;
-	}
-
-	public void setPhrase(String phrase) {
-		this.phrase = phrase;
-	}
-
-	public int getTelegramId() {
-		return this.telegramId;
-	}
-
-	public void setTelegramId(int telegramId) {
-		this.telegramId = telegramId;
 	}
 
 }

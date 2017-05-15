@@ -2,7 +2,7 @@ package name.voropaiev.bot.strategy.impl;
 
 import org.telegram.telegrambots.api.objects.Message;
 
-import name.voropaiev.bot.LongPollingBotEntryPoint;
+import name.voropaiev.bot.main.LongPollingBotEntryPoint;
 import name.voropaiev.bot.strategy.IInputCommandStrategy;
 
 public class StartCommandStrategy implements IInputCommandStrategy {

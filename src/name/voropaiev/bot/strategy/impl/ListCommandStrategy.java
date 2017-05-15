@@ -4,9 +4,9 @@ import java.util.List;
 
 import org.telegram.telegrambots.api.objects.Message;
 
-import name.voropaiev.bot.LongPollingBotEntryPoint;
 import name.voropaiev.bot.jpa.entities.Phrase;
 import name.voropaiev.bot.jpa.service.PhraseService;
+import name.voropaiev.bot.main.LongPollingBotEntryPoint;
 import name.voropaiev.bot.strategy.IInputCommandStrategy;
 
 public class ListCommandStrategy implements IInputCommandStrategy {
