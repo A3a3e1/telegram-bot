@@ -5,30 +5,16 @@ import java.util.Random;
 
 import org.telegram.telegrambots.api.objects.Message;
 
+import lombok.Data;
 import name.voropaiev.bot.jpa.entities.Phrase;
 import name.voropaiev.bot.jpa.service.PhraseService;
 import name.voropaiev.bot.main.LongPollingBotEntryPoint;
 
-public class MessageProcess {
+@Data
+public class CommonMessageProcess {
 	
 	private Message message;
 	private List<String> keywordList;
-
-	public Message getMessage() {
-		return message;
-	}
-
-	public void setMessage(Message message) {
-		this.message = message;
-	}
-
-	public List<String> getKeywordList() {
-		return keywordList;
-	}
-
-	public void setKeywordList(List<String> keywordList) {
-		this.keywordList = keywordList;
-	}
 
 	public void process() {
 		// Generate random number. Bot will reply if weight>15 (random

@@ -14,7 +14,7 @@ public class PhraseService {
 
 	public static void addPhrase(String nickName, String phraseString) {
 
-		EntityManagerFactory emfactory = Persistence.createEntityManagerFactory("TeleBot");
+		EntityManagerFactory emfactory = Persistence.createEntityManagerFactory("TeleBotPU");
 
 		EntityManager entitymanager = emfactory.createEntityManager();
 		entitymanager.getTransaction().begin();
@@ -31,7 +31,7 @@ public class PhraseService {
 	}
 
 	public static void getPhrases(String userName) {
-		EntityManagerFactory emfactory = Persistence.createEntityManagerFactory("TeleBot");
+		EntityManagerFactory emfactory = Persistence.createEntityManagerFactory("TeleBotPU");
 		EntityManager entitymanager = emfactory.createEntityManager();
 		Phrase phrase = entitymanager.find(Phrase.class, 2);
 
@@ -41,7 +41,7 @@ public class PhraseService {
 	}
 
 	public static List<Phrase> getAllPhrases() {
-		EntityManagerFactory emfactory = Persistence.createEntityManagerFactory("TeleBot");
+		EntityManagerFactory emfactory = Persistence.createEntityManagerFactory("TeleBotPU");
 		EntityManager entitymanager = emfactory.createEntityManager();
 		Query query = entitymanager.createNamedQuery("Phrase.findAll");
 
@@ -50,7 +50,7 @@ public class PhraseService {
 	}
 
 	public static List<Phrase> getPhraseByNickname(String nickName) {
-		EntityManagerFactory emfactory = Persistence.createEntityManagerFactory("TeleBot");
+		EntityManagerFactory emfactory = Persistence.createEntityManagerFactory("TeleBotPU");
 		EntityManager entitymanager = emfactory.createEntityManager();
 		Query query = entitymanager.createNamedQuery("Phrase.findAllByNickName").setParameter("nickName", nickName);
 
@@ -58,7 +58,7 @@ public class PhraseService {
 	}
 
 	public static List<String> getKeywordList() {
-		EntityManagerFactory emfactory = Persistence.createEntityManagerFactory("TeleBot");
+		EntityManagerFactory emfactory = Persistence.createEntityManagerFactory("TeleBotPU");
 		EntityManager entitymanager = emfactory.createEntityManager();
 		Query query = entitymanager.createNamedQuery("Phrase.findAllNickNames");
 		List<String> keywordList = new ArrayList<>();

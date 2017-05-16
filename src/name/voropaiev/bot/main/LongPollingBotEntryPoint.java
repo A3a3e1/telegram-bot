@@ -20,7 +20,8 @@ import name.voropaiev.bot.strategy.impl.PingCommandStrategy;
 import name.voropaiev.bot.strategy.impl.RandomCommandStrategy;
 import name.voropaiev.bot.strategy.impl.StartCommandStrategy;
 import name.voropaiev.bot.strategy.impl.StopCommandStrategy;
-import name.voropaiev.bot.strategy.service.MessageProcess;
+import name.voropaiev.bot.strategy.service.CommonMessageProcess;
+import name.voropaiev.bot.strategy.service.EditedMessageProcess;
 
 public class LongPollingBotEntryPoint extends TelegramLongPollingBot {
 
@@ -53,9 +54,10 @@ public class LongPollingBotEntryPoint extends TelegramLongPollingBot {
 		System.out.println(update.toString());
 		
 		Message message = update.getMessage();
-		String inputTextExtractedCommand = inputTextExtractCommand(message.getText());
+		Message editedMessage = update.getEditedMessage();
 		
 		if (message != null) {
+			String inputTextExtractedCommand = inputTextExtractCommand(message.getText());
 			
 			//Design Pattern 'Command'
 			Map<String, IInputCommandStrategy> commandMap = new HashMap<>();
@@ -72,12 +74,18 @@ public class LongPollingBotEntryPoint extends TelegramLongPollingBot {
 			
 			if (message.hasText() && isBotIsActive() == true) {
 				
-				MessageProcess messageProcess = new MessageProcess();
+				CommonMessageProcess messageProcess = new CommonMessageProcess();
 				messageProcess.setKeywordList(keywordList);
 				messageProcess.setMessage(message);
 				messageProcess.process();
 				
 			}
+		}
+		
+		if (editedMessage != null) {
+			EditedMessageProcess editedMessageProcess = new EditedMessageProcess(2);
+			editedMessageProcess.setEditedMessage(editedMessage);
+			editedMessageProcess.process();
 		}
 	}
 	
