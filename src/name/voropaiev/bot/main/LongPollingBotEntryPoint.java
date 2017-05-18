@@ -8,7 +8,9 @@ import org.telegram.telegrambots.ApiContextInitializer;
 import org.telegram.telegrambots.TelegramBotsApi;
 import org.telegram.telegrambots.api.methods.send.SendMessage;
 import org.telegram.telegrambots.api.objects.Message;
+import org.telegram.telegrambots.api.objects.PhotoSize;
 import org.telegram.telegrambots.api.objects.Update;
+import org.telegram.telegrambots.api.objects.User;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 
 import name.voropaiev.bot.command.listenum.Command;
@@ -20,8 +22,13 @@ import name.voropaiev.bot.strategy.impl.PingCommandStrategy;
 import name.voropaiev.bot.strategy.impl.RandomCommandStrategy;
 import name.voropaiev.bot.strategy.impl.StartCommandStrategy;
 import name.voropaiev.bot.strategy.impl.StopCommandStrategy;
-import name.voropaiev.bot.strategy.service.CommonMessageProcess;
-import name.voropaiev.bot.strategy.service.EditedMessageProcess;
+import name.voropaiev.bot.strategy.service.impl.ChatPhotoChangedMessageProcess;
+import name.voropaiev.bot.strategy.service.impl.ChatTitleChangedMessageProcess;
+import name.voropaiev.bot.strategy.service.impl.CommonMessageProcess;
+import name.voropaiev.bot.strategy.service.impl.EditedMessageProcess;
+import name.voropaiev.bot.strategy.service.impl.ForwardedInsideMessageProcess;
+import name.voropaiev.bot.strategy.service.impl.UserJoinedChatMessageProcess;
+import name.voropaiev.bot.strategy.service.impl.UserLeftChatMessageProcess;
 
 public class LongPollingBotEntryPoint extends TelegramLongPollingBot {
 
@@ -56,7 +63,7 @@ public class LongPollingBotEntryPoint extends TelegramLongPollingBot {
 		Message message = update.getMessage();
 		Message editedMessage = update.getEditedMessage();
 		
-		if (message != null) {
+		if (message != null && message.getText() != null) {
 			String inputTextExtractedCommand = inputTextExtractCommand(message.getText());
 			
 			//Design Pattern 'Command'
@@ -82,13 +89,43 @@ public class LongPollingBotEntryPoint extends TelegramLongPollingBot {
 			}
 		}
 		
+		if (message != null && message.getForwardDate() != null) {
+			ForwardedInsideMessageProcess forwardedInsideMessageProcess = new ForwardedInsideMessageProcess(3);
+			forwardedInsideMessageProcess.setForwardedInsideMessage(message);
+			forwardedInsideMessageProcess.process();
+		}
+		
 		if (editedMessage != null) {
 			EditedMessageProcess editedMessageProcess = new EditedMessageProcess(2);
 			editedMessageProcess.setEditedMessage(editedMessage);
 			editedMessageProcess.process();
 		}
+		
+		if (message != null && message.getLeftChatMember() != null) {
+			UserLeftChatMessageProcess userLeftChatMessageProcess = new UserLeftChatMessageProcess(0);
+			userLeftChatMessageProcess.setUserLeftChatMessage(message);
+			userLeftChatMessageProcess.process();
+		}
+		
+		if (message != null && message.getNewChatMember() != null) {
+			UserJoinedChatMessageProcess userJoinedChatMessageProcess = new UserJoinedChatMessageProcess(1);
+			userJoinedChatMessageProcess.setUserJoinedChatMessage(message);
+			userJoinedChatMessageProcess.process();
+		}
+		
+		if (message != null && message.getNewChatTitle() != null) {
+			ChatTitleChangedMessageProcess chatTitleChangedMessageProcess = new ChatTitleChangedMessageProcess(6);
+			chatTitleChangedMessageProcess.setChatTitleChangedMessage(message);
+			chatTitleChangedMessageProcess.process();
+		}
+		
+		if (message != null && message.getNewChatPhoto() != null) {
+			ChatPhotoChangedMessageProcess chatPhotoChangedMessageProcess = new ChatPhotoChangedMessageProcess(5);
+			chatPhotoChangedMessageProcess.setChatPhotoChangedMessage(message);
+			chatPhotoChangedMessageProcess.process();
+		}
 	}
-	
+
 	private String inputTextExtractCommand(String inputString) {
 		for (Command command : Command.values()) {
 			if (inputString.contains(command.toString())) {
