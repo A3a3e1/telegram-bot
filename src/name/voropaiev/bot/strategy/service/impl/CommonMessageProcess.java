@@ -1,4 +1,4 @@
-package name.voropaiev.bot.strategy.service;
+package name.voropaiev.bot.strategy.service.impl;
 
 import java.util.List;
 import java.util.Random;
@@ -9,9 +9,10 @@ import lombok.Data;
 import name.voropaiev.bot.jpa.entities.Phrase;
 import name.voropaiev.bot.jpa.service.PhraseService;
 import name.voropaiev.bot.main.LongPollingBotEntryPoint;
+import name.voropaiev.bot.strategy.service.IMessageProcess;
 
 @Data
-public class CommonMessageProcess {
+public class CommonMessageProcess implements IMessageProcess {
 	
 	private Message message;
 	private List<String> keywordList;

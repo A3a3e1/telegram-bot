@@ -1,4 +1,4 @@
-package name.voropaiev.bot.strategy.service;
+package name.voropaiev.bot.strategy.service.impl;
 
 import java.util.List;
 import java.util.Random;
@@ -11,9 +11,10 @@ import name.voropaiev.bot.jpa.entities.Phrase;
 import name.voropaiev.bot.jpa.service.EventPhraseService;
 import name.voropaiev.bot.jpa.service.PhraseService;
 import name.voropaiev.bot.main.LongPollingBotEntryPoint;
+import name.voropaiev.bot.strategy.service.IMessageProcess;
 
 @Data
-public class EditedMessageProcess {
+public class EditedMessageProcess implements IMessageProcess {
 
 	List<String> phrases;
 
@@ -34,7 +35,7 @@ public class EditedMessageProcess {
 			int high = phrases.size();
 			int result = random.nextInt(high - low) + low;
 
-			LongPollingBotEntryPoint.sendMsg(editedMessage, phrases.get(result));
+			LongPollingBotEntryPoint.sendMsgWithReply(editedMessage, phrases.get(result));
 		}
 		return;
 
