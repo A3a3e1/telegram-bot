@@ -22,6 +22,7 @@ import name.voropaiev.bot.strategy.impl.PingCommandStrategy;
 import name.voropaiev.bot.strategy.impl.RandomCommandStrategy;
 import name.voropaiev.bot.strategy.impl.StartCommandStrategy;
 import name.voropaiev.bot.strategy.impl.StopCommandStrategy;
+import name.voropaiev.bot.strategy.service.IMessageProcess;
 import name.voropaiev.bot.strategy.service.impl.ChatPhotoChangedMessageProcess;
 import name.voropaiev.bot.strategy.service.impl.ChatTitleChangedMessageProcess;
 import name.voropaiev.bot.strategy.service.impl.CommonMessageProcess;
@@ -90,38 +91,32 @@ public class LongPollingBotEntryPoint extends TelegramLongPollingBot {
 		}
 		
 		if (message != null && message.getForwardDate() != null) {
-			ForwardedInsideMessageProcess forwardedInsideMessageProcess = new ForwardedInsideMessageProcess(3);
-			forwardedInsideMessageProcess.setForwardedInsideMessage(message);
+			IMessageProcess forwardedInsideMessageProcess = new ForwardedInsideMessageProcess(message, 3);
 			forwardedInsideMessageProcess.process();
 		}
 		
 		if (editedMessage != null) {
-			EditedMessageProcess editedMessageProcess = new EditedMessageProcess(2);
-			editedMessageProcess.setEditedMessage(editedMessage);
+			IMessageProcess editedMessageProcess = new EditedMessageProcess(editedMessage, 2);
 			editedMessageProcess.process();
 		}
 		
 		if (message != null && message.getLeftChatMember() != null) {
-			UserLeftChatMessageProcess userLeftChatMessageProcess = new UserLeftChatMessageProcess(0);
-			userLeftChatMessageProcess.setUserLeftChatMessage(message);
+			IMessageProcess userLeftChatMessageProcess = new UserLeftChatMessageProcess(message, 0);
 			userLeftChatMessageProcess.process();
 		}
-		
+			
 		if (message != null && message.getNewChatMember() != null) {
-			UserJoinedChatMessageProcess userJoinedChatMessageProcess = new UserJoinedChatMessageProcess(1);
-			userJoinedChatMessageProcess.setUserJoinedChatMessage(message);
+			IMessageProcess userJoinedChatMessageProcess = new UserJoinedChatMessageProcess(message, 1);
 			userJoinedChatMessageProcess.process();
 		}
 		
 		if (message != null && message.getNewChatTitle() != null) {
-			ChatTitleChangedMessageProcess chatTitleChangedMessageProcess = new ChatTitleChangedMessageProcess(6);
-			chatTitleChangedMessageProcess.setChatTitleChangedMessage(message);
+			IMessageProcess chatTitleChangedMessageProcess = new ChatTitleChangedMessageProcess(message, 6);
 			chatTitleChangedMessageProcess.process();
 		}
 		
 		if (message != null && message.getNewChatPhoto() != null) {
-			ChatPhotoChangedMessageProcess chatPhotoChangedMessageProcess = new ChatPhotoChangedMessageProcess(5);
-			chatPhotoChangedMessageProcess.setChatPhotoChangedMessage(message);
+			IMessageProcess chatPhotoChangedMessageProcess = new ChatPhotoChangedMessageProcess(message, 5);
 			chatPhotoChangedMessageProcess.process();
 		}
 	}

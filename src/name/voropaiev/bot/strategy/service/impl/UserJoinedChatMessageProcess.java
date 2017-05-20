@@ -17,15 +17,15 @@ import name.voropaiev.bot.strategy.service.IMessageProcess;
 public class UserJoinedChatMessageProcess implements IMessageProcess {
 
 	List<String> phrases;
+	private Message userJoinedChatMessage;
 
-	public UserJoinedChatMessageProcess(int eventType) {
-		phrases = EventPhraseService.getPhraseByEvent(eventType);
+	public UserJoinedChatMessageProcess(Message message, int eventType) {
+		this.userJoinedChatMessage = message;
+		this.phrases = EventPhraseService.getPhraseByEvent(eventType);
 		for (String s : phrases) {
 			System.out.println(s);
 		}
 	}
-
-	private Message userJoinedChatMessage;
 
 	public void process() {
 

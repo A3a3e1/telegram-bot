@@ -17,15 +17,15 @@ import name.voropaiev.bot.strategy.service.IMessageProcess;
 public class EditedMessageProcess implements IMessageProcess {
 
 	List<String> phrases;
+	private Message editedMessage;
 
-	public EditedMessageProcess(int eventType) {
-		phrases = EventPhraseService.getPhraseByEvent(eventType);
+	public EditedMessageProcess(Message message, int eventType) {
+		this.editedMessage = message;
+		this.phrases = EventPhraseService.getPhraseByEvent(eventType);
 		for (String s : phrases) {
 			System.out.println(s);
 		}
 	}
-
-	private Message editedMessage;
 
 	public void process() {
 

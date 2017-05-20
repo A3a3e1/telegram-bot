@@ -17,15 +17,15 @@ import name.voropaiev.bot.strategy.service.IMessageProcess;
 public class ForwardedInsideMessageProcess implements IMessageProcess {
 
 	List<String> phrases;
+	private Message forwardedInsideMessage;
 
-	public ForwardedInsideMessageProcess(int eventType) {
-		phrases = EventPhraseService.getPhraseByEvent(eventType);
+	public ForwardedInsideMessageProcess(Message message, int eventType) {
+		this.forwardedInsideMessage = message;
+		this.phrases = EventPhraseService.getPhraseByEvent(eventType);
 		for (String s : phrases) {
 			System.out.println(s);
 		}
 	}
-
-	private Message forwardedInsideMessage;
 
 	public void process() {
 

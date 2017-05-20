@@ -17,18 +17,18 @@ import name.voropaiev.bot.strategy.service.IMessageProcess;
 public class UserLeftChatMessageProcess implements IMessageProcess {
 
 	List<String> phrases;
+	private Message userLeftChatMessage;
 
-	public UserLeftChatMessageProcess(int eventType) {
-		phrases = EventPhraseService.getPhraseByEvent(eventType);
+	public UserLeftChatMessageProcess(Message message, int eventType) {
+		this.userLeftChatMessage = message;
+		this.phrases = EventPhraseService.getPhraseByEvent(eventType);
 		for (String s : phrases) {
 			System.out.println(s);
 		}
 	}
 
-	private Message userLeftChatMessage;
-
 	public void process() {
-
+		
 		if (phrases.size() > 0) {
 			Random random = new Random();
 			int low = 0;

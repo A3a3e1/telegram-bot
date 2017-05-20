@@ -17,15 +17,15 @@ import name.voropaiev.bot.strategy.service.IMessageProcess;
 public class ChatPhotoChangedMessageProcess implements IMessageProcess {
 
 	List<String> phrases;
+	private Message chatPhotoChangedMessage;
 
-	public ChatPhotoChangedMessageProcess(int eventType) {
-		phrases = EventPhraseService.getPhraseByEvent(eventType);
+	public ChatPhotoChangedMessageProcess(Message message, int eventType) {
+		this.chatPhotoChangedMessage = message;
+		this.phrases = EventPhraseService.getPhraseByEvent(eventType);
 		for (String s : phrases) {
 			System.out.println(s);
 		}
 	}
-
-	private Message chatPhotoChangedMessage;
 
 	public void process() {
 
