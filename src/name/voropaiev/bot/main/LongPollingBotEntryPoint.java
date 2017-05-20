@@ -1,20 +1,16 @@
 package name.voropaiev.bot.main;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.telegram.telegrambots.ApiContextInitializer;
 import org.telegram.telegrambots.TelegramBotsApi;
 import org.telegram.telegrambots.api.methods.send.SendMessage;
 import org.telegram.telegrambots.api.objects.Message;
-import org.telegram.telegrambots.api.objects.PhotoSize;
 import org.telegram.telegrambots.api.objects.Update;
-import org.telegram.telegrambots.api.objects.User;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 
 import name.voropaiev.bot.command.listenum.Command;
-import name.voropaiev.bot.jpa.service.PhraseService;
 import name.voropaiev.bot.strategy.IInputCommandStrategy;
 import name.voropaiev.bot.strategy.impl.AddCommandStrategy;
 import name.voropaiev.bot.strategy.impl.ListCommandStrategy;
@@ -39,7 +35,6 @@ public class LongPollingBotEntryPoint extends TelegramLongPollingBot {
 	public static final String BOT_START_MESSAGE = "Bot started.....";
 
 	private static boolean botIsActive = true;
-	private static List<String> keywordList;
 
 	public static void main(String[] args) {
 		ApiContextInitializer.init();
@@ -47,8 +42,6 @@ public class LongPollingBotEntryPoint extends TelegramLongPollingBot {
 		try {
 			System.out.println(BOT_START_MESSAGE);
 			telegramBotsApi.registerBot(new LongPollingBotEntryPoint());
-
-			keywordList = PhraseService.getKeywordList();
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -82,9 +75,7 @@ public class LongPollingBotEntryPoint extends TelegramLongPollingBot {
 			
 			if (message.hasText() && isBotIsActive() == true) {
 				
-				CommonMessageProcess messageProcess = new CommonMessageProcess();
-				messageProcess.setKeywordList(keywordList);
-				messageProcess.setMessage(message);
+				IMessageProcess messageProcess = new CommonMessageProcess(message);
 				messageProcess.process();
 				
 			}

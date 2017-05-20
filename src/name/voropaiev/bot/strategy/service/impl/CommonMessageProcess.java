@@ -15,8 +15,13 @@ import name.voropaiev.bot.strategy.service.IMessageProcess;
 public class CommonMessageProcess implements IMessageProcess {
 	
 	private Message message;
-	private List<String> keywordList;
-
+	private static List<String> keywordList;
+	
+	public CommonMessageProcess(Message message) {
+		this.message = message;
+		keywordList = PhraseService.getKeywordList();
+	}
+	
 	public void process() {
 		// Generate random number. Bot will reply if weight>15 (random
 		// from 1 to 20) - TODO tune?

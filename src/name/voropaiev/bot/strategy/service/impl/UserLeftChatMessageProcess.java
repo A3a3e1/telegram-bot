@@ -6,10 +6,7 @@ import java.util.Random;
 import org.telegram.telegrambots.api.objects.Message;
 
 import lombok.Data;
-import name.voropaiev.bot.jpa.entities.EventPhrase;
-import name.voropaiev.bot.jpa.entities.Phrase;
 import name.voropaiev.bot.jpa.service.EventPhraseService;
-import name.voropaiev.bot.jpa.service.PhraseService;
 import name.voropaiev.bot.main.LongPollingBotEntryPoint;
 import name.voropaiev.bot.strategy.service.IMessageProcess;
 

@@ -30,39 +30,32 @@ public class PhraseService {
 		emfactory.close();
 	}
 
-	public static void getPhrases(String userName) {
-		EntityManagerFactory emfactory = Persistence.createEntityManagerFactory("TeleBotPU");
-		EntityManager entitymanager = emfactory.createEntityManager();
-		Phrase phrase = entitymanager.find(Phrase.class, 2);
-
-		System.out.println("phrase Id = " + phrase.getId());
-		System.out.println("phrase nickName = " + phrase.getNickName());
-		System.out.println("phrase Phrase = " + phrase.getPhrase());
-	}
-
+	@SuppressWarnings("unchecked")
 	public static List<Phrase> getAllPhrases() {
 		EntityManagerFactory emfactory = Persistence.createEntityManagerFactory("TeleBotPU");
 		EntityManager entitymanager = emfactory.createEntityManager();
 		Query query = entitymanager.createNamedQuery("Phrase.findAll");
 
-		return query.getResultList();
+		return (List<Phrase>) query.getResultList();
 
 	}
 
+	@SuppressWarnings("unchecked")
 	public static List<Phrase> getPhraseByNickname(String nickName) {
 		EntityManagerFactory emfactory = Persistence.createEntityManagerFactory("TeleBotPU");
 		EntityManager entitymanager = emfactory.createEntityManager();
 		Query query = entitymanager.createNamedQuery("Phrase.findAllByNickName").setParameter("nickName", nickName);
 
-		return query.getResultList();
+		return (List<Phrase>) query.getResultList();
 	}
 
+	@SuppressWarnings("unchecked")
 	public static List<String> getKeywordList() {
 		EntityManagerFactory emfactory = Persistence.createEntityManagerFactory("TeleBotPU");
 		EntityManager entitymanager = emfactory.createEntityManager();
 		Query query = entitymanager.createNamedQuery("Phrase.findAllNickNames");
 		List<String> keywordList = new ArrayList<>();
-		List<Phrase> phraseList = query.getResultList();
+		List<Phrase> phraseList = (List<Phrase>) query.getResultList();
 		System.out.println(phraseList.size());
 		
 		for (Phrase phrase: phraseList) {
