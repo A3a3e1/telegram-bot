@@ -10,7 +10,8 @@ import org.telegram.telegrambots.api.objects.Message;
 import org.telegram.telegrambots.api.objects.Update;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 
-import name.voropaiev.bot.command.listenum.Command;
+import name.voropaiev.bot.enums.CommandEnum;
+import name.voropaiev.bot.enums.EventPhrasesEnum;
 import name.voropaiev.bot.strategy.IInputCommandStrategy;
 import name.voropaiev.bot.strategy.impl.AddCommandStrategy;
 import name.voropaiev.bot.strategy.impl.ListCommandStrategy;
@@ -62,14 +63,15 @@ public class LongPollingBotEntryPoint extends TelegramLongPollingBot {
 			
 			//Design Pattern 'Command'
 			Map<String, IInputCommandStrategy> commandMap = new HashMap<>();
-			commandMap.put("/add", new AddCommandStrategy(message));
-			commandMap.put("/list", new ListCommandStrategy(message));
-			commandMap.put("/ping", new PingCommandStrategy(message));
-			commandMap.put("/random", new RandomCommandStrategy(message));
-			commandMap.put("/start", new StartCommandStrategy(message));
-			commandMap.put("/stop", new StopCommandStrategy(message));
+			commandMap.put(CommandEnum.ADD.toString(), new AddCommandStrategy(message));
+			commandMap.put(CommandEnum.LIST.toString(), new ListCommandStrategy(message));
+			commandMap.put(CommandEnum.PING.toString(), new PingCommandStrategy(message));
+			commandMap.put(CommandEnum.RANDOM.toString(), new RandomCommandStrategy(message));
+			commandMap.put(CommandEnum.START.toString(), new StartCommandStrategy(message));
+			commandMap.put(CommandEnum.STOP.toString(), new StopCommandStrategy(message));
 			
-			if (!"-1".equals(inputTextExtractedCommand)) {
+			if (!CommandEnum.NOT_A_COMMAND.toString()
+					.equals(inputTextExtractedCommand)) {
 				commandMap.get(inputTextExtractedCommand).execute();
 			}
 			
@@ -81,44 +83,50 @@ public class LongPollingBotEntryPoint extends TelegramLongPollingBot {
 			}
 		}
 		
-		if (message != null && message.getForwardDate() != null) {
-			IMessageProcess forwardedInsideMessageProcess = new ForwardedInsideMessageProcess(message, 3);
-			forwardedInsideMessageProcess.process();
-		}
-		
-		if (editedMessage != null) {
-			IMessageProcess editedMessageProcess = new EditedMessageProcess(editedMessage, 2);
-			editedMessageProcess.process();
-		}
-		
 		if (message != null && message.getLeftChatMember() != null) {
-			IMessageProcess userLeftChatMessageProcess = new UserLeftChatMessageProcess(message, 0);
+			IMessageProcess userLeftChatMessageProcess = 
+					new UserLeftChatMessageProcess(message, EventPhrasesEnum.USER_LEFT_CHAT.getCode());
 			userLeftChatMessageProcess.process();
 		}
 			
 		if (message != null && message.getNewChatMember() != null) {
-			IMessageProcess userJoinedChatMessageProcess = new UserJoinedChatMessageProcess(message, 1);
+			IMessageProcess userJoinedChatMessageProcess = 
+					new UserJoinedChatMessageProcess(message, EventPhrasesEnum.USER_JOINED_CHAT.getCode());
 			userJoinedChatMessageProcess.process();
 		}
+
+		if (editedMessage != null) {
+			IMessageProcess editedMessageProcess = 
+					new EditedMessageProcess(editedMessage, EventPhrasesEnum.MESSAGE_EDITED.getCode());
+			editedMessageProcess.process();
+		}
 		
-		if (message != null && message.getNewChatTitle() != null) {
-			IMessageProcess chatTitleChangedMessageProcess = new ChatTitleChangedMessageProcess(message, 6);
-			chatTitleChangedMessageProcess.process();
+		if (message != null && message.getForwardDate() != null) {
+			IMessageProcess forwardedInsideMessageProcess = 
+					new ForwardedInsideMessageProcess(message, EventPhrasesEnum.MESSAGE_FORWARDED_INSIDE.getCode());
+			forwardedInsideMessageProcess.process();
 		}
 		
 		if (message != null && message.getNewChatPhoto() != null) {
-			IMessageProcess chatPhotoChangedMessageProcess = new ChatPhotoChangedMessageProcess(message, 5);
+			IMessageProcess chatPhotoChangedMessageProcess = 
+					new ChatPhotoChangedMessageProcess(message, EventPhrasesEnum.CHAT_LOGO_CHANGED.getCode());
 			chatPhotoChangedMessageProcess.process();
+		}
+		
+		if (message != null && message.getNewChatTitle() != null) {
+			IMessageProcess chatTitleChangedMessageProcess = 
+					new ChatTitleChangedMessageProcess(message, EventPhrasesEnum.CHAT_TITLE_CHANGED.getCode());
+			chatTitleChangedMessageProcess.process();
 		}
 	}
 
 	private String inputTextExtractCommand(String inputString) {
-		for (Command command : Command.values()) {
+		for (CommandEnum command : CommandEnum.values()) {
 			if (inputString.contains(command.toString())) {
 				return command.toString();
 			}
 		}
-		return Command.NOT_A_COMMAND.isNotCommand();
+		return CommandEnum.NOT_A_COMMAND.isNotCommand();
 	}
 
 	public static void sendMsg(Message message, String text) {

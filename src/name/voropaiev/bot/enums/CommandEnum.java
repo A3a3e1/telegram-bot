@@ -1,6 +1,6 @@
-package name.voropaiev.bot.command.listenum;
+package name.voropaiev.bot.enums;
 
-public enum Command {
+public enum CommandEnum {
 	
 	ADD("/add"),
 	LIST("/list"),
@@ -13,7 +13,7 @@ public enum Command {
 	
 	private final String text;
 	
-	private Command (final String text) {
+	private CommandEnum (final String text) {
 		this.text = text;
 	}
 	
