@@ -17,9 +17,18 @@ public class CommonMessageProcess implements IMessageProcess {
 	private Message message;
 	private static List<String> keywordList;
 	
+	public CommonMessageProcess() {
+
+	}
+	
 	public CommonMessageProcess(Message message) {
 		this.message = message;
-		keywordList = PhraseService.getKeywordList();
+	}
+	
+	public void process(Message message, int eventType) {
+		keywordList = PhraseService.getKeywordList();		
+		this.message = message;
+		process();
 	}
 	
 	public void process() {
@@ -66,5 +75,5 @@ public class CommonMessageProcess implements IMessageProcess {
 		else
 			return;
 	}
-
+	
 }

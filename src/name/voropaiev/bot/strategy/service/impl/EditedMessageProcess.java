@@ -14,17 +14,15 @@ import name.voropaiev.bot.strategy.service.IMessageProcess;
 public class EditedMessageProcess implements IMessageProcess {
 
 	List<String> phrases;
-	private Message editedMessage;
+	int eventType;
 
-	public EditedMessageProcess(Message message, int eventType) {
-		this.editedMessage = message;
-		this.phrases = EventPhraseService.getPhraseByEvent(eventType);
-		for (String s : phrases) {
-			System.out.println(s);
-		}
+	public EditedMessageProcess() {
+	
 	}
 
-	public void process() {
+	public void process(Message editedMessage, int eventType) {
+		this.eventType = eventType;
+		this.phrases = EventPhraseService.getPhraseByEvent(eventType);		
 
 		if (phrases.size() > 0) {
 			Random random = new Random();

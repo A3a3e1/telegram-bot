@@ -10,7 +10,8 @@ public enum EventPhrasesEnum {
 	CHAT_LOGO_CHANGED(5),
 	CHAT_TITLE_CHANGED(6),
 	
-	EVENT_NOT_EXIST(-1);
+	EVENT_NOT_EXIST(-1),
+	DUMMY_EVENT(999);
 	
 	private final int code;
 	

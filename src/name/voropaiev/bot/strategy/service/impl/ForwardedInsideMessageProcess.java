@@ -14,17 +14,13 @@ import name.voropaiev.bot.strategy.service.IMessageProcess;
 public class ForwardedInsideMessageProcess implements IMessageProcess {
 
 	List<String> phrases;
-	private Message forwardedInsideMessage;
 
-	public ForwardedInsideMessageProcess(Message message, int eventType) {
-		this.forwardedInsideMessage = message;
-		this.phrases = EventPhraseService.getPhraseByEvent(eventType);
-		for (String s : phrases) {
-			System.out.println(s);
-		}
+	public ForwardedInsideMessageProcess() {
+
 	}
 
-	public void process() {
+	public void process(Message forwardedInsideMessage, int eventType) {
+		this.phrases = EventPhraseService.getPhraseByEvent(eventType);
 
 		if (phrases.size() > 0) {
 			Random random = new Random();

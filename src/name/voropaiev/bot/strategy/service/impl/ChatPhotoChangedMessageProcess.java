@@ -14,17 +14,13 @@ import name.voropaiev.bot.strategy.service.IMessageProcess;
 public class ChatPhotoChangedMessageProcess implements IMessageProcess {
 
 	List<String> phrases;
-	private Message chatPhotoChangedMessage;
 
-	public ChatPhotoChangedMessageProcess(Message message, int eventType) {
-		this.chatPhotoChangedMessage = message;
-		this.phrases = EventPhraseService.getPhraseByEvent(eventType);
-		for (String s : phrases) {
-			System.out.println(s);
-		}
+	public ChatPhotoChangedMessageProcess() {
+
 	}
 
-	public void process() {
+	public void process(Message chatPhotoChangedMessage, int eventType) {
+		this.phrases = EventPhraseService.getPhraseByEvent(eventType);
 
 		if (phrases.size() > 0) {
 			Random random = new Random();

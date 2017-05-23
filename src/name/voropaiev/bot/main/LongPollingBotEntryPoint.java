@@ -10,8 +10,12 @@ import org.telegram.telegrambots.api.objects.Message;
 import org.telegram.telegrambots.api.objects.Update;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+
 import name.voropaiev.bot.enums.CommandEnum;
 import name.voropaiev.bot.enums.EventPhrasesEnum;
+import name.voropaiev.bot.guice.modules.CommonMessageProcessorModule;
 import name.voropaiev.bot.strategy.IInputCommandStrategy;
 import name.voropaiev.bot.strategy.impl.AddCommandStrategy;
 import name.voropaiev.bot.strategy.impl.ListCommandStrategy;
@@ -36,7 +40,15 @@ public class LongPollingBotEntryPoint extends TelegramLongPollingBot {
 	public static final String BOT_START_MESSAGE = "Bot started.....";
 
 	private static boolean botIsActive = true;
-
+	
+	public IMessageProcess commonMessageProcessorInstance;
+	public IMessageProcess editedMessageProcessorInstance;
+	public IMessageProcess userLeftChatMessageProcessorInstance;
+	public IMessageProcess userJoinedChatMessageProcessorInstance;
+	public IMessageProcess forwardedInsideMessageProcessorInstance;
+	public IMessageProcess chatTitleChangedMessageProcessorInstance;
+	public IMessageProcess chatPhotoChangedMessageProcessorInstance;
+	
 	public static void main(String[] args) {
 		ApiContextInitializer.init();
 		TelegramBotsApi telegramBotsApi = new TelegramBotsApi();
@@ -54,6 +66,15 @@ public class LongPollingBotEntryPoint extends TelegramLongPollingBot {
 		
 		// for debug purposes:
 		System.out.println(update.toString());
+		
+		Injector injector = Guice.createInjector(new CommonMessageProcessorModule());
+		commonMessageProcessorInstance = injector.getInstance(CommonMessageProcess.class);
+		editedMessageProcessorInstance = injector.getInstance(EditedMessageProcess.class);
+		userLeftChatMessageProcessorInstance = injector.getInstance(UserLeftChatMessageProcess.class);
+		userJoinedChatMessageProcessorInstance = injector.getInstance(UserJoinedChatMessageProcess.class);
+		forwardedInsideMessageProcessorInstance = injector.getInstance(ForwardedInsideMessageProcess.class);
+		chatTitleChangedMessageProcessorInstance = injector.getInstance(ChatTitleChangedMessageProcess.class);
+		chatPhotoChangedMessageProcessorInstance = injector.getInstance(ChatPhotoChangedMessageProcess.class);
 		
 		Message message = update.getMessage();
 		Message editedMessage = update.getEditedMessage();
@@ -76,47 +97,32 @@ public class LongPollingBotEntryPoint extends TelegramLongPollingBot {
 			}
 			
 			if (message.hasText() && isBotIsActive() == true) {
-				
-				IMessageProcess messageProcess = new CommonMessageProcess(message);
-				messageProcess.process();
-				
+				commonMessageProcessorInstance.process(message, EventPhrasesEnum.DUMMY_EVENT.getCode());
 			}
 		}
 		
 		if (message != null && message.getLeftChatMember() != null) {
-			IMessageProcess userLeftChatMessageProcess = 
-					new UserLeftChatMessageProcess(message, EventPhrasesEnum.USER_LEFT_CHAT.getCode());
-			userLeftChatMessageProcess.process();
+			userLeftChatMessageProcessorInstance.process(message, EventPhrasesEnum.USER_LEFT_CHAT.getCode());
 		}
 			
 		if (message != null && message.getNewChatMember() != null) {
-			IMessageProcess userJoinedChatMessageProcess = 
-					new UserJoinedChatMessageProcess(message, EventPhrasesEnum.USER_JOINED_CHAT.getCode());
-			userJoinedChatMessageProcess.process();
+			userJoinedChatMessageProcessorInstance.process(message, EventPhrasesEnum.USER_JOINED_CHAT.getCode());
 		}
 
 		if (editedMessage != null) {
-			IMessageProcess editedMessageProcess = 
-					new EditedMessageProcess(editedMessage, EventPhrasesEnum.MESSAGE_EDITED.getCode());
-			editedMessageProcess.process();
+			editedMessageProcessorInstance.process(editedMessage, EventPhrasesEnum.MESSAGE_EDITED.getCode());
 		}
 		
 		if (message != null && message.getForwardDate() != null) {
-			IMessageProcess forwardedInsideMessageProcess = 
-					new ForwardedInsideMessageProcess(message, EventPhrasesEnum.MESSAGE_FORWARDED_INSIDE.getCode());
-			forwardedInsideMessageProcess.process();
+			forwardedInsideMessageProcessorInstance.process(message, EventPhrasesEnum.MESSAGE_FORWARDED_INSIDE.getCode());
 		}
 		
 		if (message != null && message.getNewChatPhoto() != null) {
-			IMessageProcess chatPhotoChangedMessageProcess = 
-					new ChatPhotoChangedMessageProcess(message, EventPhrasesEnum.CHAT_LOGO_CHANGED.getCode());
-			chatPhotoChangedMessageProcess.process();
+			chatPhotoChangedMessageProcessorInstance.process(message, EventPhrasesEnum.CHAT_LOGO_CHANGED.getCode());
 		}
 		
 		if (message != null && message.getNewChatTitle() != null) {
-			IMessageProcess chatTitleChangedMessageProcess = 
-					new ChatTitleChangedMessageProcess(message, EventPhrasesEnum.CHAT_TITLE_CHANGED.getCode());
-			chatTitleChangedMessageProcess.process();
+			chatTitleChangedMessageProcessorInstance.process(message, EventPhrasesEnum.CHAT_TITLE_CHANGED.getCode());
 		}
 	}
 

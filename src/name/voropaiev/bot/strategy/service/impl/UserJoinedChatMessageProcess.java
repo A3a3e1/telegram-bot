@@ -14,17 +14,13 @@ import name.voropaiev.bot.strategy.service.IMessageProcess;
 public class UserJoinedChatMessageProcess implements IMessageProcess {
 
 	List<String> phrases;
-	private Message userJoinedChatMessage;
 
-	public UserJoinedChatMessageProcess(Message message, int eventType) {
-		this.userJoinedChatMessage = message;
-		this.phrases = EventPhraseService.getPhraseByEvent(eventType);
-		for (String s : phrases) {
-			System.out.println(s);
-		}
+	public UserJoinedChatMessageProcess() {
+
 	}
 
-	public void process() {
+	public void process(Message userJoinedChatMessage, int eventType) {
+		this.phrases = EventPhraseService.getPhraseByEvent(eventType);
 
 		if (phrases.size() > 0) {
 			Random random = new Random();
